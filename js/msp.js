@@ -51,6 +51,7 @@ var MSP_codes = {
     MSP_ACC_TRIM:           240, // get acc angle trim values
     MSP_SET_ACC_TRIM:       239, // set acc angle trim values
     MSP_GPSSVINFO:          164, // get Signal Strength (only U-Blox)
+    MSP_GPSDEBUGINFO:       166, // get GPS debugging data (only U-Blox)
 
     // Additional private MSP for baseflight configurator (yes thats us \o/)
     MSP_RCMAP:              64, // get channel map (also returns number of channels total)
@@ -434,6 +435,10 @@ var MSP = {
                         needle += 4;
                     }
                 }
+                break;
+            case MSP_codes.MSP_GPSDEBUGINFO:
+                GPS_DATA.updateRate = data.getUint32(0, 1);
+                GPS_DATA.gpsHoldPos = data.getUint8(4);
                 break;
             // Additional private MSP for baseflight configurator
             case MSP_codes.MSP_RCMAP:

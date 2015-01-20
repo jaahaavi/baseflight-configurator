@@ -13,6 +13,17 @@
     padding: 5px;
     line-height: 18px;
 }
+.tab-gps .GPS_debug {
+    float: left;
+    display: block;
+
+    width: 190px;
+
+}
+.tab-gps .GPS_debug table {
+    padding: 5px;
+    line-height: 18px;
+}
 .tab-gps .GPS_signal_strength {
     float: left;
 
@@ -27,6 +38,7 @@
     line-height: 18px;
 }
 .tab-gps .GPS_info .head,
+.tab-gps .GPS_debug .head,
 .tab-gps .GPS_signal_strength .head {
     display: block;
 

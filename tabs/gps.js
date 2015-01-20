@@ -16,6 +16,8 @@ TABS.gps.initialize = function (callback) {
     MSP.send_message(MSP_codes.MSP_RAW_GPS, false, false, load_html);
 
     function process_html() {
+        var gps_hp_lat = 0;
+        var gps_hp_lon = 0;
         // translate to user-selected language
         localize();
 
@@ -28,7 +30,11 @@ TABS.gps.initialize = function (callback) {
         }
 
         function get_gpsvinfo_data() {
-            MSP.send_message(MSP_codes.MSP_GPSSVINFO, false, false, update_ui);
+            MSP.send_message(MSP_codes.MSP_GPSSVINFO, false, false, get_gpsdebug_data);
+        }
+
+        function get_gpsdebug_data() {
+            MSP.send_message(MSP_codes.MSP_GPSDEBUGINFO, false, false, update_ui);
         }
 
         function update_ui() {
@@ -53,6 +59,33 @@ TABS.gps.initialize = function (callback) {
                 $('td', row).eq(0).text(GPS_DATA.svid[i]);
                 $('td', row).eq(1).text(GPS_DATA.quality[i]);
                 $('td', row).eq(2).find('progress').val(GPS_DATA.cno[i]);
+            }
+            
+            // Update GPS debug data
+            if (GPS_DATA.updateRate < 10 || GPS_DATA.updateRate == '')
+                $('.GPS_debug td.updateRate').text('- ms');
+            else
+                $('.GPS_debug td.updateRate').text(GPS_DATA.updateRate + ' ms');
+
+            if (GPS_DATA.gpsHoldPos) {
+                if (gps_hp_lat == 0) {
+                    gps_hp_lat = GPS_DATA.lat;
+                    gps_hp_lon = GPS_DATA.lon;
+                }
+                var scaleDown = Math.cos((Math.abs(GPS_DATA.lat) / 10000000) * 0.0174532925);
+                var latDiff = gps_hp_lat - GPS_DATA.lat;
+                var lonDiff = (gps_hp_lon - GPS_DATA.lon) * scaleDown;
+                var dist = Math.sqrt((latDiff * latDiff) + (lonDiff * lonDiff)) * 1.113195;
+                $('.GPS_debug td.latdiff').text(Math.round(latDiff));
+                $('.GPS_debug td.londiff').text(Math.round(lonDiff));
+                $('.GPS_debug td.posdiff').text(Math.round(dist) + ' cm');
+            }
+            else {
+                gps_hp_lat = 0;
+                gps_hp_lon = 0;
+                $('.GPS_debug td.latdiff').text('-');
+                $('.GPS_debug td.londiff').text('-');
+                $('.GPS_debug td.posdiff').text('- cm');
             }
         }
 
