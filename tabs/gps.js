@@ -18,8 +18,71 @@ TABS.gps.initialize = function (callback) {
     function process_html() {
         var gps_hp_lat = 0;
         var gps_hp_lon = 0;
+        var c = document.getElementById("deviationCanvas");
+        var ctx = c.getContext("2d");
+        var areaWidth = c.width;
+        var areaHeight = c.height;
+        var maxX = areaWidth/2;
+        var maxY = areaHeight/2;
+        // How many circles to draw:
+        var circleCount = 5;
+        var deviationTestRunning = 0;
+
+        ctx.translate(areaWidth/2, areaHeight/2);
+
         // translate to user-selected language
         localize();
+
+        function drawCircles() {
+            ctx.strokeStyle="#ADADAD";
+            for(var i = 0; i < circleCount; i++) {
+            ctx.beginPath();
+            ctx.arc(0, 0, maxX/circleCount * (i + 1), 0, 2 * Math.PI);
+            ctx.stroke();
+            }
+        }
+
+        function scaleCmToPixel(pixel) {
+            return Math.round(maxX/circleCount/100*pixel);
+        }
+        
+        function clearCanvas() {
+            ctx.clearRect(-maxX, -maxY, areaWidth, areaHeight);
+            circleCount = parseFloat($('.GPS_deviation select[name="deviation_resolution"]').val());
+            drawCircles();
+        }
+
+        function drawPixel(x, y) {
+            ctx.fillStyle="#000000";
+            if(x >= maxX) {
+                ctx.fillStyle="#FF0000";
+                x = maxX -1;
+            } else if(x <= -maxX) {
+                ctx.fillStyle="#FF0000";
+                x = -maxX;
+            }
+            if(y >= maxY) {
+                ctx.fillStyle="#FF0000";
+                y = maxY -1;
+            } else if(y <= -maxY) {
+                ctx.fillStyle="#FF0000";
+                y = -maxY;
+            }
+            ctx.fillRect(x, y, 1, 1);
+        }
+        
+        $('a.runDeviationTest').click(function () {
+            var self = $(this);
+            if(deviationTestRunning) {
+            deviationTestRunning = 0;
+            document.getElementById("mySelect").disabled = false;
+            // TODO Change stopt button text to start
+            } else {
+            deviationTestRunning = 1;
+            document.getElementById("mySelect").disabled = true;
+            // TODO Change start button text to stop
+            }
+        });
 
         function get_raw_gps_data() {
             MSP.send_message(MSP_codes.MSP_RAW_GPS, false, false, get_comp_gps_data);
@@ -36,6 +99,8 @@ TABS.gps.initialize = function (callback) {
         function get_gpsdebug_data() {
             MSP.send_message(MSP_codes.MSP_GPSDEBUGINFO, false, false, update_ui);
         }
+
+        drawCircles();
 
         function update_ui() {
             var lat = GPS_DATA.lat / 10000000;
@@ -67,10 +132,11 @@ TABS.gps.initialize = function (callback) {
             else
                 $('.GPS_debug td.updateRate').text(GPS_DATA.updateRate + ' ms');
 
-            if (GPS_DATA.gpsHoldPos) {
+            if (deviationTestRunning) {
                 if (gps_hp_lat == 0) {
                     gps_hp_lat = GPS_DATA.lat;
                     gps_hp_lon = GPS_DATA.lon;
+                    clearCanvas();
                 }
                 var scaleDown = Math.cos((Math.abs(GPS_DATA.lat) / 10000000) * 0.0174532925);
                 var latDiff = gps_hp_lat - GPS_DATA.lat;
@@ -79,6 +145,7 @@ TABS.gps.initialize = function (callback) {
                 $('.GPS_debug td.latdiff').text(Math.round(latDiff));
                 $('.GPS_debug td.londiff').text(Math.round(lonDiff));
                 $('.GPS_debug td.posdiff').text(Math.round(dist) + ' cm');
+                drawPixel(scaleCmToPixel(latDiff * 1.113195), scaleCmToPixel(lonDiff * 1.113195));
             }
             else {
                 gps_hp_lat = 0;

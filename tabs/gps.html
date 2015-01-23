@@ -143,4 +143,39 @@
             </tr>
         </table>
     </div>
+    <div class="GPS_deviation">
+        <span class="head" i18n="gpsDeviationHead" i18n_title="gpsDeviationHeadTitle"></span>
+        <table>
+            <tr>
+                <td colspan="2">
+                <canvas id="deviationCanvas" width="350" height="350" style="border:1px solid silver;">
+                Your browser does not support the HTML5 canvas tag.</canvas>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <div class="resolution">
+                <dt i18n="deviationResolution"></dt>
+                <dd>
+                    <select name="deviation_resolution" id="mySelect">
+                        <option value="3">3m</option>
+                        <option value="4">4m</option>
+                        <option value="5" selected="selected">5m</option>
+                        <option value="6">6m</option>
+                        <option value="7">7m</option>
+                        <option value="8">8m</option>
+                        <option value="9">9m</option>
+                        <option value="10">10m</option>
+                    </select>
+                </dd>
+                </div>
+                </td>
+                <td>
+                <div class="buttons">
+                    <a class="runDeviationTest" href="#" i18n="gpsDeviationStart"></a>
+                </div>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>

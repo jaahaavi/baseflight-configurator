@@ -613,22 +613,37 @@
         "message": "GPS position update rate: How often new position is received. Should be around 200ms for 5hz updates"
     },
     "gpsLatDiff": {
-        "message": "POS LAT difference:"
+        "message": "POS LAT deviation:"
     },
     "gpsLatDiffTitle": {
-        "message": "GPS position hold latitude difference compared to point where position hold was activated.\nThis can be used for check GPS hardware accuracy."
+        "message": "GPS position hold latitude deviation compared to point where position hold was activated.\nThis can be used for check GPS hardware accuracy.\nUnit is 1/10000000 of deg."
     },
     "gpsLonDiff": {
-        "message": "POS LON difference:"
+        "message": "POS LON deviation:"
     },
     "gpsLonDiffTitle": {
-        "message": "GPS position hold longitude difference compared to point where position hold was activated.\nThis can be used for check GPS hardware accuracy."
+        "message": "GPS position hold longitude deviation compared to point where position hold was activated.\nThis can be used for check GPS hardware accuracy.\nUnit is 1/10000000 of deg."
     },
     "gpsPosDiff": {
-        "message": "POS difference:"
+        "message": "POS deviation:"
     },
     "gpsPosDiffTitle": {
-        "message": "GPS position hold difference compared to point where position hold was activated in centimeters.\nThis can be used for check GPS hardware accuracy."
+        "message": "GPS position hold deviation compared to point where position hold was activated in centimeters.\nThis can be used for check GPS hardware accuracy."
+    },
+    "gpsDeviationHead": {
+        "message": "GPS Deviation test"
+    },
+    "gpsDeviationHeadTitle": {
+        "message": "GPS Hardware deviation can be tested.\n1. Put craft on open terrain\n2. Power craft and use long USB cable to connect craft with configurator.\n3. Wait until GPS is fixed.\n4. Start Deviation test and wait 10 to 30 minutes.\n5. Analyze data:\n- Every circle line is one meter\n- Good GPS will draw line inside smallest circle.\n- Inside second circle is still good, but after that GPS isn't good enough.\nTo get more accuracy: GPS place can be moved away from interferences or changing to better GPS HW."
+    },
+    "deviationResolution": {
+        "message": "Test area radius:"
+    },
+    "gpsDeviationStart": {
+        "message": "Start Deviation test"
+    },
+    "gpsDeviationStop": {
+        "message": "Stop Deviation test"
     },
 
     "motorsMaster": {

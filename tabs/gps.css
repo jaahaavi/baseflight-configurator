@@ -37,8 +37,25 @@
     padding: 5px;
     line-height: 18px;
 }
+.tab-gps .GPS_deviation {
+    float: left;
+
+    margin-left: 10px;
+
+    width: 365px;
+    
+    border: 1px solid silver;
+
+}
+.tab-gps .GPS_deviation table {
+    padding: 5px;
+    line-height: 18px;
+}
+
+
 .tab-gps .GPS_info .head,
 .tab-gps .GPS_debug .head,
+.tab-gps .GPS_deviation .head,
 .tab-gps .GPS_signal_strength .head {
     display: block;
 
@@ -54,4 +71,45 @@
 }
 .tab-gps a:hover {
     text-decoration: underline;
+}
+
+.tab-gps .buttons {
+    clear: both;
+    padding-bottom: 8px;
+}
+
+.tab-gps .buttons a {
+    display: block;
+
+    float: right;
+
+    width: 150px;
+    height: 24px;
+    line-height: 24px;
+
+    text-align: center;
+    font-weight: bold;
+
+    border: 1px solid silver;
+    background-color: #ececec;
+}
+.tab-gps .buttons a:hover {
+    background-color: #dedcdc;
+    text-decoration: none;
+}
+
+
+.tab-gps .resolution dt {
+    float: left;
+
+    width: 120px;
+    height: 22px;
+}
+.tab-gps .resolution dd {
+    height: 22px;
+}
+.tab-gps .resolution select {
+    float: right;
+    width: 50px;
+    border: 1px solid silver;
 }
