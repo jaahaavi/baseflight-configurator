@@ -597,6 +597,9 @@
     "gpsSignalStr": {
         "message": "Signal Strength"
     },
+    "gpsSatIdTitle": {
+        "message": "GPS: 1-32\nSBAS: 120-158\nGalileo: 211-246\nBeiDou: 159-164, 33-64\nIMES: 173-182\nQZSS: 193-197\nGLONASS: 65-96, 255"
+    },
     "gpsQualityTitle": {
         "message": "0: This channel is idle\n1: Channel is searching\n2: Signal aquired\n3: Signal detected but unusable\n4: Code Lock on Signal\n5,6,7: Code and Carrier locked"
     },
@@ -611,6 +614,12 @@
     },
     "gpsUpdateRateTitle": {
         "message": "GPS position update rate: How often new position is received. Should be around 200ms for 5hz updates"
+    },
+    "gpsSvinfoRate": {
+        "message": "SVINFO rate:"
+    },
+    "gpsSvinfoRateTitle": {
+        "message": "UBX-NAV-SVINFO update rate: How often we get satellite quality information data from GPS"
     },
     "gpsLatDiff": {
         "message": "POS LAT deviation:"

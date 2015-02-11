@@ -27,6 +27,7 @@ TABS.gps.initialize = function (callback) {
         // How many circles to draw:
         var circleCount = 5;
         var deviationTestRunning = 0;
+        var svinfoCallTime = 0;
 
         ctx.translate(areaWidth/2, areaHeight/2);
 
@@ -93,11 +94,67 @@ TABS.gps.initialize = function (callback) {
         }
 
         function get_gpsvinfo_data() {
-            MSP.send_message(MSP_codes.MSP_GPSSVINFO, false, false, get_gpsdebug_data);
+            // Check that enough time (1 second) has passed before polling SVINFO
+            var d = new Date();
+            if (svinfoCallTime < d.getTime()) {
+                svinfoCallTime = d.getTime() + 1000;
+                MSP.send_message(MSP_codes.MSP_GPSSVINFO, false, false, sort_gps_svinfo_data);
+            }
+            get_gpsdebug_data();
         }
 
         function get_gpsdebug_data() {
             MSP.send_message(MSP_codes.MSP_GPSDEBUGINFO, false, false, update_ui);
+        }
+        
+        // Sort chn, svid (Sat ID), quality and cno (Signal Strength) so that locked sats are first on the list.
+        function sort_gps_svinfo_data() {
+            var temp;
+            
+            // First sort by using signal strength
+            for (var i = 0; i < GPS_DATA.numCh; i++) {
+                for (var j = 0; j < (GPS_DATA.numCh - 1); j++) {
+                    if (GPS_DATA.cno[j] < GPS_DATA.cno[j + 1]) {
+                        temp = GPS_DATA.quality[j];
+                        GPS_DATA.quality[j] = GPS_DATA.quality[j + 1];
+                        GPS_DATA.quality[j + 1] = temp;
+
+                        temp = GPS_DATA.svid[j];
+                        GPS_DATA.svid[j] = GPS_DATA.svid[j + 1];
+                        GPS_DATA.svid[j + 1] = temp;
+
+                        temp = GPS_DATA.cno[j];
+                        GPS_DATA.cno[j] = GPS_DATA.cno[j + 1];
+                        GPS_DATA.cno[j + 1] = temp;
+
+                        temp = GPS_DATA.chn[j];
+                        GPS_DATA.chn[j] = GPS_DATA.chn[j + 1];
+                        GPS_DATA.chn[j + 1] = temp;
+                    }
+                }
+            }
+            // Then sort using quality
+            for (var i = 0; i < GPS_DATA.numCh; i++) {
+                for (var j = 0; j < (GPS_DATA.numCh - 1); j++) {
+                    if (GPS_DATA.quality[j] < GPS_DATA.quality[j + 1]) {
+                        temp = GPS_DATA.quality[j];
+                        GPS_DATA.quality[j] = GPS_DATA.quality[j + 1];
+                        GPS_DATA.quality[j + 1] = temp;
+
+                        temp = GPS_DATA.svid[j];
+                        GPS_DATA.svid[j] = GPS_DATA.svid[j + 1];
+                        GPS_DATA.svid[j + 1] = temp;
+
+                        temp = GPS_DATA.cno[j];
+                        GPS_DATA.cno[j] = GPS_DATA.cno[j + 1];
+                        GPS_DATA.cno[j + 1] = temp;
+
+                        temp = GPS_DATA.chn[j];
+                        GPS_DATA.chn[j] = GPS_DATA.chn[j + 1];
+                        GPS_DATA.chn[j + 1] = temp;
+                    }
+                }
+            }
         }
 
         drawCircles();
@@ -131,6 +188,12 @@ TABS.gps.initialize = function (callback) {
                 $('.GPS_debug td.updateRate').text('- ms');
             else
                 $('.GPS_debug td.updateRate').text(GPS_DATA.updateRate + ' ms');
+
+            // Update GPS debug data
+            if (GPS_DATA.svinfoRate < 1 || GPS_DATA.svinfoRate == '')
+                $('.GPS_debug td.svinfoRate').text('- ms');
+            else
+                $('.GPS_debug td.svinfoRate').text(GPS_DATA.svinfoRate + ' ms');
 
             if (deviationTestRunning) {
                 if (gps_hp_lat == 0) {

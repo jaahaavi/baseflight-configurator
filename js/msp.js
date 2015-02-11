@@ -423,10 +423,10 @@ var MSP = {
                 break;
             case MSP_codes.MSP_GPSSVINFO:
                 if (data.byteLength > 0) {
-                    var numCh = data.getUint8(0);
+                    GPS_DATA.numCh = data.getUint8(0);
 
                     var needle = 1;
-                    for (var i = 0; i < numCh; i++) {
+                    for (var i = 0; i < GPS_DATA.numCh; i++) {
                         GPS_DATA.chn[i] = data.getUint8(needle);
                         GPS_DATA.svid[i] = data.getUint8(needle + 1);
                         GPS_DATA.quality[i] = data.getUint8(needle + 2);
@@ -438,7 +438,7 @@ var MSP = {
                 break;
             case MSP_codes.MSP_GPSDEBUGINFO:
                 GPS_DATA.updateRate = data.getUint32(0, 1);
-                GPS_DATA.gpsHoldPos = data.getUint8(4);
+                GPS_DATA.svinfoRate = data.getUint32(4, 1);
                 break;
             // Additional private MSP for baseflight configurator
             case MSP_codes.MSP_RCMAP:
